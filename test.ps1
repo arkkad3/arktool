@@ -1,18 +1,15 @@
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
+Write-Host "1. Install Chrome"
+Write-Host "2. Install VS Code"
+Write-Host "3. Exit"
 
-$form = New-Object System.Windows.Forms.Form
-$form.Text = "My Windows Tool"
-$form.Size = New-Object System.Drawing.Size(400,300)
+$choice = Read-Host "Choose option"
 
-$button = New-Object System.Windows.Forms.Button
-$button.Text = "Run Optimization"
-$button.Size = New-Object System.Drawing.Size(150,40)
-$button.Location = New-Object System.Drawing.Point(120,100)
+switch ($choice) {
 
-$button.Add_Click({
-    [System.Windows.Forms.MessageBox]::Show("Optimization Started!")
-})
+1 { winget install Google.Chrome }
 
-$form.Controls.Add($button)
-$form.ShowDialog()
+2 { winget install Microsoft.VisualStudioCode }
+
+3 { exit }
+
+}
