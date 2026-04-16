@@ -1,5 +1,5 @@
-$url = "https://raw.githubusercontent.com/username/repo/main/installer.exe"
-$output = "$env:TEMP\installer.exe"
+$url = "https://github.com/arkkad3/arktool/blob/Utility/FortiClientVPNInstaller.exe"
+$output = "$env:TEMP\FortiClientVPNInstaller.exe"
 
 # Download the EXE
 Invoke-WebRequest $url -OutFile $output
