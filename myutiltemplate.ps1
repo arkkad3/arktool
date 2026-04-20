@@ -1,288 +1,294 @@
 <#
 .NOTES
-    Author         : Your Name
-    Description    : Modular PowerShell Framework
-    Version        : 2.0.0
-#>
+Template derived from the structure/patterns in winutil.ps1 (WinUtil)
+Keeps the same UI lifecycle: XAML -> $sync binding -> config-driven UI -> event handlers -> ShowDialog
+#>  # 【1-cfc562】【2-57bff3】
 
-param (
-    [string]$Action,
-    [string]$Config,
-    [switch]$NoUI,
-    [switch]$Offline,
-    [switch]$DebugMode
+param(
+  [string]$Config,
+  [switch]$Run,
+  [switch]$Noui,
+  [switch]$Offline
 )
 
-# ==============================
-# Global State
-# ==============================
+#region --- Parameters (same intent/shape) ---
+if ($Config) { $PARAM_CONFIG = $Config }
+$PARAM_RUN = $false
+if ($Run) { $PARAM_RUN = $true }
 
-$GLOBAL:App = @{
-    ConfigPath = $Config
-    NoUI       = $NoUI.IsPresent
-    Offline    = $Offline.IsPresent
-    Debug      = $DebugMode.IsPresent
+$PARAM_NOUI = $false
+if ($Noui) { $PARAM_NOUI = $true }
+
+$PARAM_OFFLINE = $false
+if ($Offline) { $PARAM_OFFLINE = $true }
+#endregion  # 【1-cfc562】【2-57bff3】
+
+#region --- Admin check (keep consistent behavior) ---
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+  ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+  Write-Output "This tool needs to be run as Administrator."
+  exit 1
+}
+#endregion  # 【1-cfc562】【2-57bff3】
+
+#region --- Assemblies (WPF + WinForms) ---
+Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName System.Windows.Forms
+#endregion  # 【1-cfc562】【2-57bff3】
+
+#region --- Shared sync state (same pattern) ---
+$sync = [Hashtable]::Synchronized(@{})
+$sync.version = "TEMPLATE-1.0"
+$sync.ProcessRunning = $false
+
+# selections like the original
+$sync.selectedApps     = [System.Collections.Generic.List[string]]::new()
+$sync.selectedTweaks   = [System.Collections.Generic.List[string]]::new()
+$sync.selectedToggles  = [System.Collections.Generic.List[string]]::new()
+$sync.selectedFeatures = [System.Collections.Generic.List[string]]::new()
+
+$sync.currentTab = "Install"
+$sync.configs = @{}
+#endregion  # 【1-cfc562】【2-57bff3】
+
+#region --- Config placeholders (keep schema; swap in your full JSON if desired) ---
+# Option A: keep as PSObjects/Hashtables
+$sync.configs.appnavigation = @{
+  # keys should match your XAML button names for Invoke-WPFButton routing
+  "WPFInstall" = @{
+    Content="Install/Upgrade Applications"; Category="____Actions"; Type="Button"; Order="1"
+    Description="Install or upgrade selected applications"
+  }
+  "WPFUninstall" = @{
+    Content="Uninstall Applications"; Category="____Actions"; Type="Button"; Order="2"
+    Description="Uninstall selected applications"
+  }
 }
 
-# ==============================
-# Core Utilities
-# ==============================
+$sync.configs.applications = @{
+  # minimal example; add more entries using same shape as winutil
+  "WPFInstall7zip" = @{
+    category="Utilities"; choco="7zip"; content="7-Zip"; description="Sample app entry"
+    link="https://www.7-zip.org/"; winget="7zip.7zip"; foss=$true
+  }
+}
 
-function Write-Log {
-    param (
-        [string]$Message,
-        [string]$Level = "INFO"
+$sync.configs.tweaks = @{
+  "WPFTweaksExample" = @{
+    Content="Example Tweak"; Description="Template tweak example"
+    category="Essential Tweaks"; panel="1"
+    registry=@(
+      @{ Path="HKCU:\Software\MyCompany\Example"; Name="Enabled"; Value="0"; Type="DWord"; OriginalValue="" }
     )
-
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $log = "[$timestamp][$Level] $Message"
-
-    Write-Output $log
+  }
 }
 
-function Ensure-Admin {
-    $isAdmin = ([Security.Principal.WindowsPrincipal] `
-        [Security.Principal.WindowsIdentity]::GetCurrent()
-    ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
-    if (-not $isAdmin) {
-        Write-Log "Restarting as Administrator..." "WARN"
-
-        $argList = @()
-        $PSBoundParameters.GetEnumerator() | ForEach-Object {
-            if ($_.Value -is [switch] -and $_.Value) {
-                $argList += "-$($_.Key)"
-            } elseif ($_.Value) {
-                $argList += "-$($_.Key) `"$($_.Value)`""
-            }
-        }
-
-        $script = "& `"$PSCommandPath`" $($argList -join ' ')"
-
-        Start-Process powershell `
-            -ArgumentList "-ExecutionPolicy Bypass -NoProfile -Command $script" `
-            -Verb RunAs
-
-        exit
-    }
+$sync.configs.feature = @{
+  "WPFFeatureExample" = @{
+    Content="Example Feature"; Description="Template feature example"
+    category="Features"; panel="1"; feature=@("NetFx3"); InvokeScript=@(); link=""
+  }
 }
 
-# ==============================
-# Initialization Module
-# ==============================
-
-function Initialize-App {
-    Write-Log "Initializing application..."
-
-    if ($GLOBAL:App.ConfigPath) {
-        Load-Config -Path $GLOBAL:App.ConfigPath
-    }
-
-    if ($GLOBAL:App.Debug) {
-        Write-Log "Debug mode enabled" "DEBUG"
-    }
+$sync.configs.themes = @{
+  shared = @{
+    FontFamily="Arial"; FontSize="12"
+    HeaderFontFamily="Consolas, Monaco"; HeaderFontSize="16"
+  }
+  Light = @{
+    MainBackgroundColor="#F7F7F7"; MainForegroundColor="#232629"
+  }
+  Dark  = @{
+    MainBackgroundColor="#232629"; MainForegroundColor="#F7F7F7"
+  }
 }
+#endregion  # 【1-cfc562】【2-57bff3】
 
-function Load-Config {
-    param ([string]$Path)
-
-    if (Test-Path $Path) {
-        Write-Log "Loading config from $Path"
-        $GLOBAL:App.ConfigData = Get-Content $Path | ConvertFrom-Json
-    } else {
-        Write-Log "Config file not found: $Path" "ERROR"
-    }
-}
-
-# ==============================
-# Feature Modules
-# ==============================
-
-function Invoke-Backup {
-    Write-Log "Running Backup प्रक्रिया..."
-
-    # TODO: Add backup logic
-}
-
-function Invoke-Restore {
-    Write-Log "Running Restore प्रक्रिया..."
-
-    # TODO: Add restore logic
-}
-
-function Invoke-Cleanup {
-    Write-Log "Running Cleanup प्रक्रिया..."
-
-    # TODO: Add cleanup logic
-}
-
-function Invoke-Report {
-    Write-Log "Generating report..."
-
-    # TODO: Add reporting logic
-}
-
-# ==============================
-# UI Module (Optional)
-# ==============================
-
-function Start-UI {
-
-    Write-Log "Launching WPF UI..."
-
-    Add-Type -AssemblyName PresentationFramework
-
-    [xml]$xaml = @"
+#region --- REQUIRED: Your existing XAML (UI remains) ---
+# IMPORTANT:
+# 1) Paste your existing $inputXML content here (from your working winutil)
+# 2) Do not change Name="..." of controls used in code (SearchBar, ThemeButton, etc.)
+# 3) Keep the same layout/UI so it looks identical
+$inputXML = @'
+<!-- PASTE YOUR EXISTING XAML HERE (UNCHANGED UI) -->
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        Title="PowerShell Tool"
-        Height="400" Width="500"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
-
-    <Grid Margin="10">
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <TextBlock Text="Utility Dashboard"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   Margin="0,0,0,10"/>
-
-        <!-- Buttons -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200">
-
-            <Button Name="btnBackup" Content="Run Backup" Height="35" Margin="0,5"/>
-            <Button Name="btnRestore" Content="Restore Backup" Height="35" Margin="0,5"/>
-            <Button Name="btnCleanup" Content="Cleanup" Height="35" Margin="0,5"/>
-            <Button Name="btnReport" Content="Generate Report" Height="35" Margin="0,5"/>
-
-        </StackPanel>
-
-        <!-- Status -->
-        <TextBlock Name="txtStatus"
-                   Grid.Row="2"
-                   Text="Ready"
-                   Margin="0,10,0,0"
-                   Foreground="Gray"/>
-
-    </Grid>
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WinUtil Template" Height="700" Width="1100">
+  <Grid>
+    <TextBlock Text="Replace this XAML with your existing WinUtil UI (unchanged)." 
+               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+  </Grid>
 </Window>
-"@
+'@
+#endregion  # 【1-cfc562】【2-57bff3】
 
-    # Load XAML
-    $reader = (New-Object System.Xml.XmlNodeReader $xaml)
-    $window = [Windows.Markup.XamlReader]::Load($reader)
+#region --- Helpers (XAML load + named element binding) ---
+function Import-WpfWindow {
+  param([Parameter(Mandatory)][string]$Xaml)
 
-    # Get Controls
-    $btnBackup  = $window.FindName("btnBackup")
-    $btnRestore = $window.FindName("btnRestore")
-    $btnCleanup = $window.FindName("btnCleanup")
-    $btnReport  = $window.FindName("btnReport")
-    $txtStatus  = $window.FindName("txtStatus")
+  $Xaml = $Xaml -replace 'mc:Ignorable="d"', '' -replace "x:N", 'N' -replace '^<Win.*', '<Window'
+  [void][System.Reflection.Assembly]::LoadWithPartialName('presentationframework')
+  [xml]$xml = $Xaml
+  $reader = New-Object System.Xml.XmlNodeReader $xml
+  return [Windows.Markup.XamlReader]::Load($reader)
+}  # 【1-cfc562】【2-57bff3】
 
-    # ==============================
-    # Event Bindings
-    # ==============================
+function Bind-WpfNamedElements {
+  param([Parameter(Mandatory)]$Form, [Parameter(Mandatory)][string]$Xaml)
+  [xml]$xml = $Xaml
+  $xml.SelectNodes("//*[@Name]") | ForEach-Object {
+    $name = $_.Name
+    $sync[$name] = $Form.FindName($name)
+  }
+}  # 【1-cfc562】【2-57bff3】
+#endregion
 
-    $btnBackup.Add_Click({
-        $txtStatus.Text = "Running backup..."
-        Invoke-Backup
-        $txtStatus.Text = "Backup completed"
-    })
-
-    $btnRestore.Add_Click({
-        $txtStatus.Text = "Restoring..."
-        Invoke-Restore
-        $txtStatus.Text = "Restore completed"
-    })
-
-    $btnCleanup.Add_Click({
-        $txtStatus.Text = "Cleaning up..."
-        Invoke-Cleanup
-        $txtStatus.Text = "Cleanup done"
-    })
-
-    $btnReport.Add_Click({
-        $txtStatus.Text = "Generating report..."
-        Invoke-Report
-        $txtStatus.Text = "Report ready"
-    })
-
-    # ==============================
-    # Show Window
-    # ==============================
-
-    $window.ShowDialog() | Out-Null
+#region --- UI builders (stubs; keep UI logic pattern) ---
+function Initialize-WPFUI {
+  [OutputType([void])]
+  param([Parameter(Mandatory)][string]$TargetGridName)
+  # Stub: keep same signature so your old calls still work
+  # In your full version, this initializes visual containers or virtualization, etc. 【1-cfc562】【2-57bff3】
 }
 
-# ==============================
-# Dispatcher (Command Router)
-# ==============================
+function Invoke-WPFUIElements {
+  param(
+    [Parameter(Mandatory)]$configVariable,
+    [Parameter(Mandatory)][string]$targetGridName,
+    [int]$columncount = 1
+  )
 
-function Invoke-Action {
-    param ([string]$ActionName)
+  # Template stub:
+  # - In your full winutil, this creates controls based on configVariable entries and adds them to target grid.
+  # - Here we keep the hook so UI remains driven by config.
+  # TODO: paste your actual Invoke-WPFUIElements implementation here to fully preserve behavior. 【1-cfc562】【2-57bff3】
+}
+#endregion
 
-    switch ($ActionName.ToLower()) {
+#region --- Search helpers (stubs matching original intent) ---
+function Find-AppsByNameOrDescription {
+  param([string]$SearchString)
+  # Template stub: in full script, hide app entries not matching SearchString 【1-cfc562】【2-57bff3】
+}
 
-        "backup"   { Invoke-Backup }
-        "restore"  { Invoke-Restore }
-        "cleanup"  { Invoke-Cleanup }
-        "report"   { Invoke-Report }
+function Find-TweaksByNameOrDescription {
+  param([string]$SearchString)
+  # Template stub: in full script, hide tweak entries not matching SearchString 【1-cfc562】【2-57bff3】
+}
+#endregion
 
-        default {
-            Write-Log "Unknown action: $ActionName" "ERROR"
-            Show-Help
-        }
+#region --- Theme / Popup hooks (stubs) ---
+function Invoke-WPFPopup {
+  param(
+    [hashtable]$PopupActionTable,
+    [ValidateSet("Show","Hide","Toggle")][string]$Action,
+    [string[]]$Popups
+  )
+  # Template stub: keep signature; wire your existing popup logic here 【1-cfc562】【2-57bff3】
+}
+
+function Invoke-WinutilThemeChange {
+  param([ValidateSet("Auto","Dark","Light")][string]$theme)
+  # Template stub: in your full script, apply theme values to UI using $sync.configs.themes 【1-cfc562】【2-57bff3】
+}
+#endregion
+
+#region --- Button router (keep same pattern) ---
+function Invoke-WPFButton {
+  param([string]$Name)
+  switch ($Name) {
+    "WPFInstall"   { Invoke-ActionInstall }
+    "WPFUninstall" { Invoke-ActionUninstall }
+    default { Write-Debug "No handler for button: $Name" }
+  }
+}  # 【1-cfc562】【2-57bff3】
+#endregion
+
+#region --- Actions (safe placeholders) ---
+function Invoke-ActionInstall {
+  if ($sync.ProcessRunning) { return }
+  $sync.ProcessRunning = $true
+  try {
+    # TODO: plug in your install logic (winget/choco) here
+    Write-Host "INSTALL action triggered (template). Selected apps: $($sync.selectedApps.Count)"
+  } finally {
+    $sync.ProcessRunning = $false
+  }
+}
+
+function Invoke-ActionUninstall {
+  if ($sync.ProcessRunning) { return }
+  $sync.ProcessRunning = $true
+  try {
+    # TODO: plug in uninstall logic here
+    Write-Host "UNINSTALL action triggered (template). Selected apps: $($sync.selectedApps.Count)"
+  } finally {
+    $sync.ProcessRunning = $false
+  }
+}
+#endregion
+
+#region --- Main execution ---
+if ($PARAM_NOUI) {
+  Write-Host "No-UI mode enabled."
+  if ($PARAM_CONFIG -and $PARAM_RUN) {
+    Write-Host "Template: would run config-driven tasks here."
+  }
+  exit 0
+}  # 【1-cfc562】【2-57bff3】
+
+# Load XAML -> Form
+$sync.Form = Import-WpfWindow -Xaml $inputXML
+Bind-WpfNamedElements -Form $sync.Form -Xaml $inputXML
+
+# Apply theme at startup (same idea)
+Invoke-WinutilThemeChange -theme "Auto"  # or $sync.preferences.theme in full script 【1-cfc562】【2-57bff3】
+
+# Build panels (keep the call sites, UI remains config-driven)
+Invoke-WPFUIElements -configVariable $sync.configs.appnavigation -targetGridName "appscategory" -columncount 1
+Initialize-WPFUI -TargetGridName "appscategory"
+Initialize-WPFUI -TargetGridName "appspanel"
+Invoke-WPFUIElements -configVariable $sync.configs.tweaks  -targetGridName "tweakspanel"   -columncount 2
+Invoke-WPFUIElements -configVariable $sync.configs.feature -targetGridName "featurespanel" -columncount 2  # 【1-cfc562】【2-57bff3】
+
+# Wire common click handlers if those controls exist in your XAML
+if ($sync.ThemeButton) {
+  $sync.ThemeButton.Add_Click({
+    Invoke-WPFPopup -PopupActionTable @{ "Settings"="Hide"; "Theme"="Toggle"; "FontScaling"="Hide" }
+  })
+}  # 【1-cfc562】【2-57bff3】
+
+# Search debounce behavior (same idea as original)
+if ($sync.SearchBar) {
+  $searchBarTimer = New-Object System.Windows.Threading.DispatcherTimer
+  $searchBarTimer.Interval = [TimeSpan]::FromMilliseconds(300)
+  $searchBarTimer.IsEnabled = $false
+
+  $searchBarTimer.add_Tick({
+    $searchBarTimer.Stop()
+    switch ($sync.currentTab) {
+      "Install" { Find-AppsByNameOrDescription   -SearchString $sync.SearchBar.Text }
+      "Tweaks"  { Find-TweaksByNameOrDescription -SearchString $sync.SearchBar.Text }
     }
+  })  # 【1-cfc562】【2-57bff3】
+
+  $sync.SearchBar.Add_TextChanged({
+    if ($searchBarTimer.IsEnabled) { $searchBarTimer.Stop() }
+    $searchBarTimer.Start()
+  })  # 【1-cfc562】【2-57bff3】
 }
 
-# ==============================
-# Help Module
-# ==============================
+# Generic hook: bind all toggle buttons by name to Invoke-WPFButton (same pattern concept)
+foreach ($k in @($sync.Keys)) {
+  if ($sync[$k] -and $sync[$k].GetType().Name -eq "ToggleButton") {
+    $sync[$k].Add_Click({
+      $sender = $args[0]
+      Invoke-WPFButton $sender.Name
+    })
+  }
+}  # 【1-cfc562】【2-57bff3】
 
-function Show-Help {
-    Write-Output @"
-Usage:
-    script.ps1 -Action <name>
-
-Actions:
-    backup      Run backup प्रक्रिया
-    restore     Restore from backup
-    cleanup     Cleanup old files
-    report      Generate report
-
-Optional:
-    -Config <path>   Path to config file
-    -NoUI            Disable UI
-    -Offline         Run in offline mode
-    -DebugMode       Enable debug logs
-"@
-}
-
-# ==============================
-# Entry Point
-# ==============================
-
-function Main {
-
-    Ensure-Admin
-    Initialize-App
-
-    if (-not $Action) {
-        if (-not $GLOBAL:App.NoUI) {
-            Start-UI
-        } else {
-            Show-Help
-        }
-        return
-    }
-
-    Invoke-Action -ActionName $Action
-}
-
-Main
+# Show UI
+$sync.Form.ShowDialog() | Out-Null
+#endregion
+``
