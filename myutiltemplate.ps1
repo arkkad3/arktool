@@ -117,6 +117,7 @@ $inputXML = @'
   <Grid>
     <TextBlock Text="Replace this XAML with your existing WinUtil UI (unchanged)." 
                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+               <Button Content="Hi" HorizontalAlignment="Left" Margin="118,127,0,0" VerticalAlignment="Top" Height="31" Width="176"/>
   </Grid>
 </Window>
 '@
