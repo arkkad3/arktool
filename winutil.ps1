@@ -1,8 +1,8 @@
 <#
 .NOTES
-    Author         : Chris Titus @christitustech
+    Author         : Chris balmera @chrisbalmeratech
     Runspace Author: @DeveloperDurp
-    GitHub         : https://github.com/ChrisTitusTech
+    GitHub         : https://github.com/ChrisbalmeraTech
     Version        : 26.04.02
 #>
 
@@ -51,7 +51,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     $script = if ($PSCommandPath) {
         "& { & `'$($PSCommandPath)`' $($argList -join ' ') }"
     } else {
-        "&([ScriptBlock]::Create((irm https://github.com/ChrisTitusTech/winutil/releases/latest/download/winutil.ps1))) $($argList -join ' ')"
+        "&([ScriptBlock]::Create((irm https://github.com/ChrisbalmeraTech/winutil/releases/latest/download/winutil.ps1))) $($argList -join ' ')"
     }
 
     $powershellCmd = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
@@ -1840,7 +1840,7 @@ function Invoke-WinUtilInstallPSProfile {
         Rename-Item $Profile -NewName ($Profile + '.bak')
     }
 
-    Start-Process pwsh -ArgumentList '-Command "irm https://github.com/ChrisTitusTech/powershell-profile/raw/main/setup.ps1 | iex"'
+    Start-Process pwsh -ArgumentList '-Command "irm https://github.com/ChrisbalmeraTech/powershell-profile/raw/main/setup.ps1 | iex"'
 }
 function Write-Win11ISOLog {
     param([string]$Message)
@@ -2548,8 +2548,8 @@ function Invoke-WinUtilISOScript {
             -Log             { param($m) Write-Host $m }
 
     .NOTES
-        Author  : Chris Titus @christitustech
-        GitHub  : https://github.com/ChrisTitusTech
+        Author  : Chris balmera @chrisbalmeratech
+        GitHub  : https://github.com/ChrisbalmeraTech
         Version : 26.03.02
     #>
     param (
@@ -3194,17 +3194,17 @@ function Invoke-WinUtilScript {
 Function Invoke-WinUtilSponsors {
     <#
     .SYNOPSIS
-        Lists Sponsors from ChrisTitusTech
+        Lists Sponsors from ChrisbalmeraTech
     .DESCRIPTION
-        Lists Sponsors from ChrisTitusTech
+        Lists Sponsors from ChrisbalmeraTech
     .EXAMPLE
         Invoke-WinUtilSponsors
     .NOTES
-        This function is used to list sponsors from ChrisTitusTech
+        This function is used to list sponsors from ChrisbalmeraTech
     #>
     try {
         # Define the URL and headers
-        $url = "https://github.com/sponsors/ChrisTitusTech"
+        $url = "https://github.com/sponsors/ChrisbalmeraTech"
         $headers = @{
             "User-Agent" = "Chrome/58.0.3029.110"
         }
@@ -3225,8 +3225,8 @@ Function Invoke-WinUtilSponsors {
         $sponsorPattern = '(?<=alt="@)[^"]+'
         $sponsors = [regex]::Matches($currentSponsorsHtml, $sponsorPattern) | ForEach-Object { $_.Value }
 
-        # Exclude "ChrisTitusTech" from the sponsors
-        $sponsors = $sponsors | Where-Object { $_ -ne "ChrisTitusTech" }
+        # Exclude "ChrisbalmeraTech" from the sponsors
+        $sponsors = $sponsors | Where-Object { $_ -ne "ChrisbalmeraTech" }
 
         # Return the sponsors
         return $sponsors
@@ -4676,7 +4676,7 @@ function Invoke-WPFButton {
     Param ([string]$Button)
 
     # Use this to get the name of the button
-    #[System.Windows.MessageBox]::Show("$Button","Chris Titus Tech's Windows Utility","OK","Info")
+    #[System.Windows.MessageBox]::Show("$Button","Chris balmera Tech's Windows Utility","OK","Info")
     if (-not $sync.ProcessRunning) {
         Set-WinUtilProgressBar  -label "" -percent 0
     }
@@ -5193,7 +5193,7 @@ function Invoke-WPFImpex {
                     }
                     $jsonFile = $allConfs | ConvertTo-Json
                     $jsonFile | Out-File $Config -Force
-                    "iex ""& { `$(irm https://christitus.com/win) } -Config '$Config'""" | Set-Clipboard
+                    "iex ""& { `$(irm https://chrisbalmera.com/win) } -Config '$Config'""" | Set-Clipboard
                 }
             } catch {
                 Write-Error "An error occurred while exporting: $_"
@@ -6307,7 +6307,7 @@ Function Invoke-WPFUltimatePerformance {
                 $duplicateOutput = powercfg /duplicatescheme $ultimateGUID
 
                 $guid = $null
-                $nameFromFile = "ChrisTitus - Ultimate Power Plan"
+                $nameFromFile = "Chrisbalmera - Ultimate Power Plan"
                 $description = "Ultimate Power Plan, added via WinUtils"
 
                 # Extract the new GUID from the duplicateOutput
@@ -6338,7 +6338,7 @@ Function Invoke-WPFUltimatePerformance {
             }
             "Disable" {
                 # Check if the Ultimate Performance plan is installed by GUID
-                $installedPlan = powercfg -list | Select-String -Pattern "ChrisTitus - Ultimate Power Plan"
+                $installedPlan = powercfg -list | Select-String -Pattern "Chrisbalmera - Ultimate Power Plan"
 
                 if ($installedPlan) {
                     # Extract the GUID of the installed Ultimate Performance plan
@@ -6668,7 +6668,7 @@ CC:::::::::::::::C       T:::::::::T            T:::::::::T
 CCC::::::::::::C         T:::::::::T            T:::::::::T
   CCCCCCCCCCCCC          TTTTTTTTTTT            TTTTTTTTTTT
 
-====Chris Titus Tech=====
+====Chris balmera Tech=====
 =====Windows Toolbox=====
 "@
 
@@ -10355,7 +10355,7 @@ $sync.configs.feature = @'
       "NetFx3"
     ],
     "InvokeScript": [],
-    "link": "https://winutil.christitus.com/dev/features/features/dotnet"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/dotnet"
   },
   "WPFFixesNTPPool": {
     "Content": "Configure NTP Server",
@@ -10365,7 +10365,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFFixesNTPPool",
-    "link": "https://winutil.christitus.com/dev/features/fixes/ntppool"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/ntppool"
   },
   "WPFFeatureshyperv": {
     "Content": "HyperV Virtualization",
@@ -10378,7 +10378,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "bcdedit /set hypervisorschedulertype classic"
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/hyperv"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/hyperv"
   },
   "WPFFeatureslegacymedia": {
     "Content": "Legacy Media (WMP, DirectPlay)",
@@ -10392,7 +10392,7 @@ $sync.configs.feature = @'
       "LegacyComponents"
     ],
     "InvokeScript": [],
-    "link": "https://winutil.christitus.com/dev/features/features/legacymedia"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/legacymedia"
   },
   "WPFFeaturewsl": {
     "Content": "Windows Subsystem for Linux",
@@ -10404,7 +10404,7 @@ $sync.configs.feature = @'
       "Microsoft-Windows-Subsystem-Linux"
     ],
     "InvokeScript": [],
-    "link": "https://winutil.christitus.com/dev/features/features/wsl"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/wsl"
   },
   "WPFFeaturenfs": {
     "Content": "NFS - Network File System",
@@ -10423,7 +10423,7 @@ $sync.configs.feature = @'
       "nfsadmin client start",
       "nfsadmin client localhost config fileaccess=755 SecFlavors=+sys -krb5 -krb5i"
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/nfs"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/nfs"
   },
   "WPFFeatureRegBackup": {
     "Content": "Enable Daily Registry Backup Task 12.30am",
@@ -10434,7 +10434,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "\r\n      New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'EnablePeriodicBackup' -Type DWord -Value 1 -Force\r\n      New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'BackupCount' -Type DWord -Value 2 -Force\r\n      $action = New-ScheduledTaskAction -Execute 'schtasks' -Argument '/run /i /tn \"\\Microsoft\\Windows\\Registry\\RegIdleBackup\"'\r\n      $trigger = New-ScheduledTaskTrigger -Daily -At 00:30\r\n      Register-ScheduledTask -Action $action -Trigger $trigger -TaskName 'AutoRegBackup' -Description 'Create System Registry Backups' -User 'System'\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/regbackup"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/regbackup"
   },
   "WPFFeatureEnableLegacyRecovery": {
     "Content": "Enable Legacy F8 Boot Recovery",
@@ -10445,7 +10445,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "bcdedit /set bootmenupolicy legacy"
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/enablelegacyrecovery"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/enablelegacyrecovery"
   },
   "WPFFeatureDisableLegacyRecovery": {
     "Content": "Disable Legacy F8 Boot Recovery",
@@ -10456,7 +10456,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "bcdedit /set bootmenupolicy standard"
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/disablelegacyrecovery"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/disablelegacyrecovery"
   },
   "WPFFeaturesSandbox": {
     "Content": "Windows Sandbox",
@@ -10466,7 +10466,7 @@ $sync.configs.feature = @'
     "feature": [
       "Containers-DisposableClientVM"
     ],
-    "link": "https://winutil.christitus.com/dev/features/features/sandbox"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/sandbox"
   },
   "WPFFeatureInstall": {
     "Content": "Install Features",
@@ -10475,7 +10475,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFFeatureInstall",
-    "link": "https://winutil.christitus.com/dev/features/features/install"
+    "link": "https://winutil.chrisbalmera.com/dev/features/features/install"
   },
   "WPFPanelAutologin": {
     "Content": "Set Up Autologin",
@@ -10484,7 +10484,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFPanelAutologin",
-    "link": "https://winutil.christitus.com/dev/features/fixes/autologin"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/autologin"
   },
   "WPFFixesUpdate": {
     "Content": "Reset Windows Update",
@@ -10493,7 +10493,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFFixesUpdate",
-    "link": "https://winutil.christitus.com/dev/features/fixes/update"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/update"
   },
   "WPFFixesNetwork": {
     "Content": "Reset Network",
@@ -10502,7 +10502,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFFixesNetwork",
-    "link": "https://winutil.christitus.com/dev/features/fixes/network"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/network"
   },
   "WPFPanelDISM": {
     "Content": "System Corruption Scan",
@@ -10511,7 +10511,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFSystemRepair",
-    "link": "https://winutil.christitus.com/dev/features/fixes/dism"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/dism"
   },
   "WPFFixesWinget": {
     "Content": "WinGet Reinstall",
@@ -10520,7 +10520,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFFixesWinget",
-    "link": "https://winutil.christitus.com/dev/features/fixes/winget"
+    "link": "https://winutil.chrisbalmera.com/dev/features/fixes/winget"
   },
   "WPFPanelControl": {
     "Content": "Control Panel",
@@ -10531,7 +10531,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "control"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/control"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/control"
   },
   "WPFPanelComputer": {
     "Content": "Computer Management",
@@ -10542,7 +10542,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "compmgmt.msc"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/computer"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/computer"
   },
   "WPFPanelNetwork": {
     "Content": "Network Connections",
@@ -10553,7 +10553,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "ncpa.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/network"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/network"
   },
   "WPFPanelPower": {
     "Content": "Power Panel",
@@ -10564,7 +10564,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "powercfg.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/power"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/power"
   },
   "WPFPanelPrinter": {
     "Content": "Printer Panel",
@@ -10575,7 +10575,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "Start-Process 'shell:::{A8A91A66-3A7D-4424-8D24-04E180695C7A}'"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/printer"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/printer"
   },
   "WPFPanelRegion": {
     "Content": "Region",
@@ -10586,7 +10586,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "intl.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/region"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/region"
   },
   "WPFPanelRestore": {
     "Content": "Windows Restore",
@@ -10597,7 +10597,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "rstrui.exe"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/restore"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/restore"
   },
   "WPFPanelSound": {
     "Content": "Sound Settings",
@@ -10608,7 +10608,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "mmsys.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/sound"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/sound"
   },
   "WPFPanelSystem": {
     "Content": "System Properties",
@@ -10619,7 +10619,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "sysdm.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/system"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/system"
   },
   "WPFPanelTimedate": {
     "Content": "Time and Date",
@@ -10630,7 +10630,7 @@ $sync.configs.feature = @'
     "InvokeScript": [
       "timedate.cpl"
     ],
-    "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/timedate"
+    "link": "https://winutil.chrisbalmera.com/dev/features/legacy-windows-panels/timedate"
   },
   "WPFWinUtilInstallPSProfile": {
     "Content": "Install CTT PowerShell Profile",
@@ -10639,7 +10639,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WinUtilInstallPSProfile",
-    "link": "https://winutil.christitus.com/dev/features/powershell-profile-powershell-7--only/installpsprofile"
+    "link": "https://winutil.chrisbalmera.com/dev/features/powershell-profile-powershell-7--only/installpsprofile"
   },
   "WPFWinUtilUninstallPSProfile": {
     "Content": "Uninstall CTT PowerShell Profile",
@@ -10648,7 +10648,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WinUtilUninstallPSProfile",
-    "link": "https://winutil.christitus.com/dev/features/powershell-profile-powershell-7--only/uninstallpsprofile"
+    "link": "https://winutil.chrisbalmera.com/dev/features/powershell-profile-powershell-7--only/uninstallpsprofile"
   },
   "WPFWinUtilSSHServer": {
     "Content": "Enable OpenSSH Server",
@@ -10657,7 +10657,7 @@ $sync.configs.feature = @'
     "Type": "Button",
     "ButtonWidth": "300",
     "function": "Invoke-WPFSSHServer",
-    "link": "https://winutil.christitus.com/dev/features/remote-access/sshserver"
+    "link": "https://winutil.chrisbalmera.com/dev/features/remote-access/sshserver"
   }
 }
 '@ | ConvertFrom-Json
@@ -10842,7 +10842,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/activity"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/activity"
   },
   "WPFTweaksHiber": {
     "Content": "Disable Hibernation",
@@ -10871,7 +10871,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "powercfg.exe /hibernate on"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/hiber"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/hiber"
   },
   "WPFTweaksWidget": {
     "Content": "Remove Widgets",
@@ -10884,7 +10884,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Write-Host \"Restoring widgets AppxPackages\"\r\n\r\n      Add-AppxPackage -Register \"C:\\Program Files\\WindowsApps\\Microsoft.WidgetsPlatformRuntime*\\AppxManifest.xml\" -DisableDevelopmentMode\r\n      Add-AppxPackage -Register \"C:\\Program Files\\WindowsApps\\MicrosoftWindows.Client.WebExperience*\\AppxManifest.xml\" -DisableDevelopmentMode\r\n\r\n      Invoke-WinUtilExplorerUpdate -action \"restart\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/widget"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/widget"
   },
   "WPFTweaksRevertStartMenu": {
     "Content": "Revert Start Menu layout",
@@ -10897,7 +10897,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WebRequest https://github.com/thebookisclosed/ViVe/releases/download/v0.3.4/ViVeTool-v0.3.4-IntelAmd.zip -OutFile ViVeTool.zip\r\n\r\n      Expand-Archive ViVeTool.zip\r\n      Remove-Item ViVeTool.zip\r\n\r\n      Start-Process 'ViVeTool\\ViVeTool.exe' -ArgumentList '/enable /id:47205210' -Wait -NoNewWindow\r\n\r\n      Remove-Item ViVeTool -Recurse\r\n\r\n      Write-Host 'New start menu reverted. Please restart your computer to take effect.'\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/revertstartmenu"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/revertstartmenu"
   },
   "WPFTweaksDisableStoreSearch": {
     "Content": "Disable Microsoft Store search results",
@@ -10910,7 +10910,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "icacls \"$Env:LocalAppData\\Packages\\Microsoft.WindowsStore_8wekyb3d8bbwe\\LocalState\\store.db\" /grant Everyone:F"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/disablestoresearch"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/disablestoresearch"
   },
   "WPFTweaksLocation": {
     "Content": "Disable Location Tracking",
@@ -10947,7 +10947,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "1"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/location"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/location"
   },
   "WPFTweaksServices": {
     "Content": "Set Services to Manual",
@@ -11911,7 +11911,7 @@ $sync.configs.tweaks = @'
         "OriginalType": "Manual"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/services"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/services"
   },
   "WPFTweaksBraveDebloat": {
     "Content": "Brave Debloat",
@@ -11955,7 +11955,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/bravedebloat"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/bravedebloat"
   },
   "WPFTweaksEdgeDebloat": {
     "Content": "Edge Debloat",
@@ -12083,7 +12083,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/edgedebloat"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/edgedebloat"
   },
   "WPFTweaksConsumerFeatures": {
     "Content": "Disable ConsumerFeatures",
@@ -12099,7 +12099,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/consumerfeatures"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/consumerfeatures"
   },
   "WPFTweaksTelemetry": {
     "Content": "Disable Telemetry",
@@ -12198,7 +12198,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      # Enable Defender Auto Sample Submission\r\n      Set-MpPreference -SubmitSamplesConsent 1\r\n\r\n      # Enable (Connected User Experiences and Telemetry) Service\r\n      Set-Service -Name diagtrack -StartupType Automatic\r\n\r\n      # Enable (Windows Error Reporting Manager) Service\r\n      Set-Service -Name wermgr -StartupType Automatic\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/telemetry"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/telemetry"
   },
   "WPFTweaksRemoveEdge": {
     "Content": "Remove Microsoft Edge",
@@ -12211,7 +12211,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Write-Host 'Installing Microsoft Edge...'\r\n      winget install Microsoft.Edge --source winget\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/removeedge"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/removeedge"
   },
   "WPFTweaksUTC": {
     "Content": "Set Time to UTC (Dual Boot)",
@@ -12227,7 +12227,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "0"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/utc"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/utc"
   },
   "WPFTweaksRemoveOneDrive": {
     "Content": "Remove OneDrive",
@@ -12240,7 +12240,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Write-Host \"Installing OneDrive\"\r\n      winget install Microsoft.Onedrive --source winget\r\n\r\n      # Enabled OneSyncSvc\r\n      Set-Service -Name OneSyncSvc -StartupType Automatic\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/removeonedrive"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/removeonedrive"
   },
   "WPFTweaksRemoveHome": {
     "Content": "Remove Home from Explorer",
@@ -12253,7 +12253,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      New-Item \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}\"\r\n      Set-ItemProperty -Path \"HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" -Name LaunchTo -Value 0\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/removehome"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/removehome"
   },
   "WPFTweaksRemoveGallery": {
     "Content": "Remove Gallery from Explorer",
@@ -12266,7 +12266,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      New-Item \"HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Desktop\\NameSpace\\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/removegallery"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/removegallery"
   },
   "WPFTweaksDisplay": {
     "Content": "Set Display for Performance",
@@ -12365,7 +12365,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "Remove-ItemProperty -Path \"HKCU:\\Control Panel\\Desktop\" -Name \"UserPreferencesMask\""
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/display"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/display"
   },
   "WPFTweaksXboxRemoval": {
     "Content": "Remove Xbox & Gaming Components",
@@ -12388,7 +12388,7 @@ $sync.configs.tweaks = @'
       "Microsoft.Xbox.TCUI",
       "Microsoft.XboxGamingOverlay"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/xboxremoval"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/xboxremoval"
   },
   "WPFTweaksDeBloat": {
     "Content": "Remove all Microsoft Store apps",
@@ -12467,7 +12467,7 @@ $sync.configs.tweaks = @'
     "InvokeScript": [
       "\r\n      $TeamsPath = \"$Env:LocalAppData\\Microsoft\\Teams\\Update.exe\"\r\n\r\n      if (Test-Path $TeamsPath) {\r\n        Write-Host \"Uninstalling Teams\"\r\n        Start-Process $TeamsPath -ArgumentList -uninstall -wait\r\n\r\n        Write-Host \"Deleting Teams directory\"\r\n        Remove-Item $TeamsPath -Recurse -Force\r\n      }\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/debloat"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/debloat"
   },
   "WPFTweaksRestorePoint": {
     "Content": "Create Restore Point",
@@ -12487,7 +12487,7 @@ $sync.configs.tweaks = @'
     "InvokeScript": [
       "\r\n      if (-not (Get-ComputerRestorePoint)) {\r\n          Enable-ComputerRestore -Drive $Env:SystemDrive\r\n      }\r\n\r\n      Checkpoint-Computer -Description \"System Restore Point created by WinUtil\" -RestorePointType MODIFY_SETTINGS\r\n      Write-Host \"System Restore Point Created Successfully\" -ForegroundColor Green\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/restorepoint"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/restorepoint"
   },
   "WPFTweaksEndTaskOnTaskbar": {
     "Content": "Enable End Task With Right Click",
@@ -12503,7 +12503,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/endtaskontaskbar"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/endtaskontaskbar"
   },
   "WPFTweaksPowershell7Tele": {
     "Content": "Disable PowerShell 7 Telemetry",
@@ -12516,7 +12516,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "[Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', '', 'Machine')"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/powershell7tele"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/powershell7tele"
   },
   "WPFTweaksStorage": {
     "Content": "Disable Storage Sense",
@@ -12532,7 +12532,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "1"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/storage"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/storage"
   },
   "WPFTweaksRemoveCopilot": {
     "Content": "Disable Microsoft Copilot",
@@ -12603,7 +12603,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Write-Host \"Install Copilot\"\r\n      winget install --name Copilot --source msstore --accept-package-agreements --accept-source-agreements --silent\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/removecopilot"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/removecopilot"
   },
   "WPFTweaksWPBT": {
     "Content": "Disable Windows Platform Binary Table (WPBT)",
@@ -12619,7 +12619,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "<RemoveEntry>"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/wpbt"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/wpbt"
   },
   "WPFTweaksRazerBlock": {
     "Content": "Block Razer Software Installs",
@@ -12648,7 +12648,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      icacls \"C:\\Windows\\Installer\\Razer\" /remove:d Everyone\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/razerblock"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/razerblock"
   },
   "WPFTweaksDisableNotifications": {
     "Content": "Disable Notification Tray/Calendar",
@@ -12671,7 +12671,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "1"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/disablenotifications"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/disablenotifications"
   },
   "WPFTweaksBlockAdobeNet": {
     "Content": "Adobe Network Block",
@@ -12684,7 +12684,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      $hosts = \"$Env:SystemRoot\\System32\\drivers\\etc\\hosts\"\r\n\r\n      Remove-Item $hosts\r\n      Move-Item \"$hosts.bak\" $hosts\r\n      ipconfig /flushdns\r\n\r\n      Write-Host \"Removed Adobe url block list from host file\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/blockadobenet"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/blockadobenet"
   },
   "WPFTweaksRightClickMenu": {
     "Content": "Set Classic Right-Click Menu",
@@ -12697,7 +12697,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\" -Recurse -Confirm:$false -Force\r\n      # Restarting Explorer in the Undo Script might not be necessary, as the Registry change without restarting Explorer does work, but just to make sure.\r\n      Write-Host Restarting explorer.exe ...\r\n      Stop-Process -Name \"explorer\" -Force\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/rightclickmenu"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/rightclickmenu"
   },
   "WPFTweaksDiskCleanup": {
     "Content": "Run Disk Cleanup",
@@ -12707,7 +12707,7 @@ $sync.configs.tweaks = @'
     "InvokeScript": [
       "\r\n      cleanmgr.exe /d C: /VERYLOWDISK\r\n      Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/diskcleanup"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/diskcleanup"
   },
   "WPFTweaksDeleteTempFiles": {
     "Content": "Delete Temporary Files",
@@ -12717,7 +12717,7 @@ $sync.configs.tweaks = @'
     "InvokeScript": [
       "\r\n      Remove-Item -Path \"$Env:Temp\\*\" -Recurse -Force\r\n      Remove-Item -Path \"$Env:SystemRoot\\Temp\\*\" -Recurse -Force\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/deletetempfiles"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/deletetempfiles"
   },
   "WPFTweaksIPv46": {
     "Content": "Prefer IPv4 over IPv6",
@@ -12733,7 +12733,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "0"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/ipv46"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/ipv46"
   },
   "WPFTweaksTeredo": {
     "Content": "Disable Teredo",
@@ -12755,7 +12755,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "netsh interface teredo set state default"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/teredo"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/teredo"
   },
   "WPFTweaksDisableIPv6": {
     "Content": "Disable IPv6",
@@ -12777,7 +12777,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "Enable-NetAdapterBinding -Name * -ComponentID ms_tcpip6"
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/disableipv6"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/disableipv6"
   },
   "WPFTweaksDisableBGapps": {
     "Content": "Disable Background Apps",
@@ -12793,7 +12793,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "0"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/disablebgapps"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/disablebgapps"
   },
   "WPFTweaksDisableFSO": {
     "Content": "Disable Fullscreen Optimizations",
@@ -12809,7 +12809,7 @@ $sync.configs.tweaks = @'
         "OriginalValue": "0"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/disablefso"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/disablefso"
   },
   "WPFToggleDarkMode": {
     "Content": "Dark Theme for Windows",
@@ -12841,7 +12841,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WinUtilExplorerUpdate\r\n      if ($sync.ThemeButton.Content -eq [char]0xF08C) {\r\n        Invoke-WinutilThemeChange -theme \"Auto\"\r\n      }\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/darkmode"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/darkmode"
   },
   "WPFToggleBingSearch": {
     "Content": "Bing Search in Start Menu",
@@ -12859,7 +12859,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/bingsearch"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/bingsearch"
   },
   "WPFToggleStandbyFix": {
     "Content": "Modern Standby fix",
@@ -12877,7 +12877,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/standbyfix"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/standbyfix"
   },
   "WPFToggleNumLock": {
     "Content": "Num Lock on Startup",
@@ -12903,7 +12903,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/numlock"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/numlock"
   },
   "WPFToggleVerboseLogon": {
     "Content": "Verbose Messages During Logon",
@@ -12921,7 +12921,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/verboselogon"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/verboselogon"
   },
   "WPFToggleStartMenuRecommendations": {
     "Content": "Recommendations in Start Menu",
@@ -12961,7 +12961,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WinUtilExplorerUpdate -action \"restart\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/startmenurecommendations"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/startmenurecommendations"
   },
   "WPFToggleHideSettingsHome": {
     "Content": "Remove Settings Home Page",
@@ -12979,7 +12979,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/hidesettingshome"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/hidesettingshome"
   },
   "WPFToggleMouseAcceleration": {
     "Content": "Mouse Acceleration",
@@ -13013,7 +13013,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/mouseacceleration"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/mouseacceleration"
   },
   "WPFToggleStickyKeys": {
     "Content": "Sticky Keys",
@@ -13031,7 +13031,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/stickykeys"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/stickykeys"
   },
   "WPFToggleNewOutlook": {
     "Content": "New Outlook",
@@ -13073,7 +13073,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/newoutlook"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/newoutlook"
   },
   "WPFToggleMultiplaneOverlay": {
     "Content": "Disable Multiplane Overlay",
@@ -13091,7 +13091,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/multiplaneoverlay"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/multiplaneoverlay"
   },
   "WPFToggleHiddenFiles": {
     "Content": "Show Hidden Files",
@@ -13115,7 +13115,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WinUtilExplorerUpdate -action \"restart\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/hiddenfiles"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/hiddenfiles"
   },
   "WPFToggleShowExt": {
     "Content": "Show File Extensions",
@@ -13139,7 +13139,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WinUtilExplorerUpdate -action \"restart\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/showext"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/showext"
   },
   "WPFToggleTaskbarSearch": {
     "Content": "Search Button in Taskbar",
@@ -13157,7 +13157,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/taskbarsearch"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/taskbarsearch"
   },
   "WPFToggleTaskView": {
     "Content": "Task View Button in Taskbar",
@@ -13175,7 +13175,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/taskview"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/taskview"
   },
   "WPFToggleTaskbarAlignment": {
     "Content": "Center Taskbar Items",
@@ -13199,7 +13199,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      Invoke-WinUtilExplorerUpdate -action \"restart\"\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/taskbaralignment"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/taskbaralignment"
   },
   "WPFToggleDetailedBSoD": {
     "Content": "Detailed BSoD",
@@ -13225,7 +13225,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/detailedbsod"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/detailedbsod"
   },
   "WPFToggleS3Sleep": {
     "Content": "S3 Sleep",
@@ -13243,14 +13243,14 @@ $sync.configs.tweaks = @'
         "DefaultState": "false"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/s3sleep"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/s3sleep"
   },
   "WPFOOSUbutton": {
     "Content": "Run OO Shutup 10",
     "category": "z__Advanced Tweaks - CAUTION",
     "panel": "1",
     "Type": "Button",
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/oosubutton"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/oosubutton"
   },
   "WPFchangedns": {
     "Content": "DNS",
@@ -13258,7 +13258,7 @@ $sync.configs.tweaks = @'
     "panel": "1",
     "Type": "Combobox",
     "ComboItems": "Default DHCP Google Cloudflare Cloudflare_Malware Cloudflare_Malware_Adult Open_DNS Quad9 AdGuard_Ads_Trackers AdGuard_Ads_Trackers_Malware_Adult",
-    "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/changedns"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/z--advanced-tweaks---caution/changedns"
   },
   "WPFAddUltPerf": {
     "Content": "Add and Activate Ultimate Performance Profile",
@@ -13266,7 +13266,7 @@ $sync.configs.tweaks = @'
     "panel": "2",
     "Type": "Button",
     "ButtonWidth": "300",
-    "link": "https://winutil.christitus.com/dev/tweaks/performance-plans/addultperf"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/performance-plans/addultperf"
   },
   "WPFRemoveUltPerf": {
     "Content": "Remove Ultimate Performance Profile",
@@ -13274,7 +13274,7 @@ $sync.configs.tweaks = @'
     "panel": "2",
     "Type": "Button",
     "ButtonWidth": "300",
-    "link": "https://winutil.christitus.com/dev/tweaks/performance-plans/removeultperf"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/performance-plans/removeultperf"
   },
   "WPFTweaksDisableExplorerAutoDiscovery": {
     "Content": "Disable Explorer Automatic Folder Discovery",
@@ -13287,7 +13287,7 @@ $sync.configs.tweaks = @'
     "UndoScript": [
       "\r\n      # Previously detected folders\r\n      $bags = \"HKCU:\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\Bags\"\r\n\r\n      # Folder types lookup table\r\n      $bagMRU = \"HKCU:\\Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\"\r\n\r\n      # Flush Explorer view database\r\n      Remove-Item -Path $bags -Recurse -Force\r\n      Write-Host \"Removed $bags\"\r\n\r\n      Remove-Item -Path $bagMRU -Recurse -Force\r\n      Write-Host \"Removed $bagMRU\"\r\n\r\n      Write-Host Please sign out and back in, or restart your computer to apply the changes!\r\n      "
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/essential-tweaks/disableexplorerautodiscovery"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/essential-tweaks/disableexplorerautodiscovery"
   },
   "WPFToggleDisableCrossDeviceResume": {
     "Content": "Cross-Device Resume",
@@ -13305,7 +13305,7 @@ $sync.configs.tweaks = @'
         "DefaultState": "true"
       }
     ],
-    "link": "https://winutil.christitus.com/dev/tweaks/customize-preferences/disablecrossdeviceresume"
+    "link": "https://winutil.chrisbalmera.com/dev/tweaks/customize-preferences/disablecrossdeviceresume"
   }
 }
 '@ | ConvertFrom-Json
@@ -15973,31 +15973,31 @@ $sync["AboutMenuItem"].Add_Click({
     Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
 
     $authorInfo = @"
-Author   : <a href="https://github.com/ChrisTitusTech">@ChrisTitusTech</a>
+Author   : <a href="https://github.com/ChrisbalmeraTech">@ChrisbalmeraTech</a>
 UI       : <a href="https://github.com/MyDrift-user">@MyDrift-user</a>, <a href="https://github.com/Marterich">@Marterich</a>
 Runspace : <a href="https://github.com/DeveloperDurp">@DeveloperDurp</a>, <a href="https://github.com/Marterich">@Marterich</a>
-GitHub   : <a href="https://github.com/ChrisTitusTech/winutil">ChrisTitusTech/winutil</a>
-Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sync.version)">$($sync.version)</a>
+GitHub   : <a href="https://github.com/ChrisbalmeraTech/winutil">ChrisbalmeraTech/winutil</a>
+Version  : <a href="https://github.com/ChrisbalmeraTech/winutil/releases/tag/$($sync.version)">$($sync.version)</a>
 "@
     Show-CustomDialog -Title "About" -Message $authorInfo
 })
 $sync["DocumentationMenuItem"].Add_Click({
     Write-Debug "Documentation clicked"
     Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
-    Start-Process "https://winutil.christitus.com/"
+    Start-Process "https://winutil.chrisbalmera.com/"
 })
 $sync["SponsorMenuItem"].Add_Click({
     Write-Debug "Sponsors clicked"
     Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
 
     $authorInfo = @"
-<a href="https://github.com/sponsors/ChrisTitusTech">Current sponsors for ChrisTitusTech:</a>
+<a href="https://github.com/sponsors/ChrisbalmeraTech">Current sponsors for ChrisbalmeraTech:</a>
 "@
     $authorInfo += "`n"
     try {
         $sponsors = Invoke-WinUtilSponsors
         foreach ($sponsor in $sponsors) {
-            $authorInfo += "<a href=`"https://github.com/sponsors/ChrisTitusTech`">$sponsor</a>`n"
+            $authorInfo += "<a href=`"https://github.com/sponsors/ChrisbalmeraTech`">$sponsor</a>`n"
         }
     } catch {
         $authorInfo += "An error occurred while fetching or processing the sponsors: $_`n"
