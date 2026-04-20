@@ -115,7 +115,7 @@ $inputXML = @'
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="WinUtil Template" Height="700" Width="1100">
   <Grid>
-    <Button x:Name="hiBtn" Content="Hi" HorizontalAlignment="Left" Margin="118,127,0,0" VerticalAlignment="Top" Height="31" Width="176" Click="hiBtn_Click"/>
+    <Button x:Name="hiBtn" Content="Hi" HorizontalAlignment="Left" Margin="118,127,0,0" VerticalAlignment="Top" Height="31" Width="176"/>
   </Grid>
 </Window>
 '@
