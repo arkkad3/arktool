@@ -127,12 +127,97 @@ function Invoke-Report {
 # ==============================
 
 function Start-UI {
-    Write-Log "Launching UI..."
+
+    Write-Log "Launching WPF UI..."
 
     Add-Type -AssemblyName PresentationFramework
 
-    # Placeholder UI logic
-    [System.Windows.MessageBox]::Show("UI not implemented yet")
+    [xml]$xaml = @"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="PowerShell Tool"
+        Height="400" Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Utility Dashboard"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200">
+
+            <Button Name="btnBackup" Content="Run Backup" Height="35" Margin="0,5"/>
+            <Button Name="btnRestore" Content="Restore Backup" Height="35" Margin="0,5"/>
+            <Button Name="btnCleanup" Content="Cleanup" Height="35" Margin="0,5"/>
+            <Button Name="btnReport" Content="Generate Report" Height="35" Margin="0,5"/>
+
+        </StackPanel>
+
+        <!-- Status -->
+        <TextBlock Name="txtStatus"
+                   Grid.Row="2"
+                   Text="Ready"
+                   Margin="0,10,0,0"
+                   Foreground="Gray"/>
+
+    </Grid>
+</Window>
+"@
+
+    # Load XAML
+    $reader = (New-Object System.Xml.XmlNodeReader $xaml)
+    $window = [Windows.Markup.XamlReader]::Load($reader)
+
+    # Get Controls
+    $btnBackup  = $window.FindName("btnBackup")
+    $btnRestore = $window.FindName("btnRestore")
+    $btnCleanup = $window.FindName("btnCleanup")
+    $btnReport  = $window.FindName("btnReport")
+    $txtStatus  = $window.FindName("txtStatus")
+
+    # ==============================
+    # Event Bindings
+    # ==============================
+
+    $btnBackup.Add_Click({
+        $txtStatus.Text = "Running backup..."
+        Invoke-Backup
+        $txtStatus.Text = "Backup completed"
+    })
+
+    $btnRestore.Add_Click({
+        $txtStatus.Text = "Restoring..."
+        Invoke-Restore
+        $txtStatus.Text = "Restore completed"
+    })
+
+    $btnCleanup.Add_Click({
+        $txtStatus.Text = "Cleaning up..."
+        Invoke-Cleanup
+        $txtStatus.Text = "Cleanup done"
+    })
+
+    $btnReport.Add_Click({
+        $txtStatus.Text = "Generating report..."
+        Invoke-Report
+        $txtStatus.Text = "Report ready"
+    })
+
+    # ==============================
+    # Show Window
+    # ==============================
+
+    $window.ShowDialog() | Out-Null
 }
 
 # ==============================
