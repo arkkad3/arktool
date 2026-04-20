@@ -14318,7 +14318,7 @@ $inputXML = @'
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="Auto" MinWidth="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonWin11ISOBackgroundColor}" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}" FontWeight="Bold" Name="WPFTab5BT">
+                    Background="{DynamicResource ButtonWin11ISOBackgroundColor}" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}" FontWeight="Bold" Name="WPFTab6BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}">
                             <Underline>R</Underline>BALMERA
@@ -15784,6 +15784,7 @@ $commonKeyEvents = {
             "C" { Invoke-WPFButton "WPFTab3BT"; $keyEventArgs.Handled = $true } # Navigate to Config tab
             "U" { Invoke-WPFButton "WPFTab4BT"; $keyEventArgs.Handled = $true } # Navigate to Updates tab
             "W" { Invoke-WPFButton "WPFTab5BT"; $keyEventArgs.Handled = $true } # Navigate to Win11ISO tab
+            "R" { Invoke-WPFButton "WPFTab6BT"; $keyEventArgs.Handled = $true } # Navigate to Win11ISO tab
         }
     }
     # Handle Ctrl key combinations for specific actions
@@ -16041,6 +16042,10 @@ $sync["FontScalingApplyButton"].Add_Click({
 # ?? Win11ISO Tab button handlers ??????????????????????????????????????????????
 
 $sync["WPFTab5BT"].Add_Click({
+    $sync["Form"].Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{ Invoke-WinUtilISOCheckExistingWork }) | Out-Null
+})
+
+$sync["WPFTab6BT"].Add_Click({
     $sync["Form"].Dispatcher.BeginInvoke([System.Windows.Threading.DispatcherPriority]::Background, [action]{ Invoke-WinUtilISOCheckExistingWork }) | Out-Null
 })
 
