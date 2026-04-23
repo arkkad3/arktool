@@ -85,13 +85,13 @@ function Install-VcRedistIfMissing {
         [string]$Arch
     )
 
-    Write-Step "Checking VC++ 2015-2022 ($Arch)..."
+    Write-Step "Checking VC++ v14 ($Arch)..."
     if (Test-VcRedistInstalled -Arch $Arch) {
         $ver = Get-VcRuntimeVersion -Arch $Arch
         if ($ver) {
-            Write-Step "VC++ 2015-2022 ($Arch) already installed. Runtime Version: $ver"
+            Write-Step "VC++ v14 ($Arch) already installed. Runtime Version: $ver"
         } else {
-            Write-Step "VC++ 2015-2022 ($Arch) already installed (detected via uninstall entry)."
+            Write-Step "VC++ v14 ($Arch) already installed (detected via uninstall entry)."
         }
         return
     }
@@ -118,7 +118,7 @@ function Install-VcRedistIfMissing {
 
     $runtimeVer = Get-VcRuntimeVersion -Arch $Arch
     if (-not $runtimeVer) {
-        throw "VC++ 2015-2022 ($Arch) install completed but runtime key not detected."
+        throw "VC++ v14 ($Arch) install completed but runtime key not detected."
     }
 
     Write-Step "VC++ installed and detected. Runtime Version: $runtimeVer"
