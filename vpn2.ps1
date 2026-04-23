@@ -8,8 +8,8 @@ $ErrorActionPreference = "Stop"
 # --------------------------
 $FortiUrl = "https://github.com/arkkad3/arktool/raw/refs/heads/Utility/FortiClientVPNInstaller.exe"
 
-$VcUrlX64 = "https://download.visualstudio.microsoft.com/download/pr/10912041/cee5d6bca2ddbcd039da727bf4acb48a/vcredist_x64.exe"
-$VcUrlX86 = "https://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe"
+$VcUrlX64 = "https://download.visualstudio.microsoft.com/download/pr/6f02464a-5e9b-486d-a506-c99a17db9a83/8995548DFFFCDE7C49987029C764355612BA6850EE09A7B6F0FDDC85BDC5C280/VC_redist.x64.exe"
+$VcUrlX86 = "https://download.visualstudio.microsoft.com/download/pr/7a47a870-bdd8-4301-9619-349e12b16c5d/E7267C1BDF9237C0B4A28CF027C382B97AA909934F84F1C92D3FB9F04173B33E/VC_redist.x86.exe"
 
 # Temp paths
 $FortiOutput = Join-Path $env:TEMP "FortiClientVPNInstaller.exe"
