@@ -96,7 +96,7 @@ function Install-VcRedistIfMissing {
         return
     }
 
-    Write-Step "VC++ 2015-2022 ($Arch) not found. Installing prerequisite..."
+    Write-Step "VC++ v14 ($Arch) not found. Installing prerequisite..."
     $vcUrl = if ($Arch -eq "x64") { $VcUrlX64 } else { $VcUrlX86 }
 
     Download-File -Url $vcUrl -OutFile $VcOutput
