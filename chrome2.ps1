@@ -1,38 +1,66 @@
 # 1. Stop Chrome if running
 Stop-Process -Name chrome -Force -ErrorAction SilentlyContinue
 
-# 2. Define possible paths
-$basePath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default"
-$prefPath = Join-Path $basePath "Preferences"
-$securePrefPath = Join-Path $basePath "Secure Preferences"
+# 2. Base Chrome user data path
+$chromeUserData = "$env:LOCALAPPDATA\Google\Chrome\User Data"
 
-# 3. Choose which file to use
-if (Test-Path $prefPath) {
-    $targetFile = $prefPath
-    Write-Host "Using Preferences file"
-}
-elseif (Test-Path $securePrefPath) {
-    $targetFile = $securePrefPath
-    Write-Host "Preferences not found, using Secure Preferences"
-}
-else {
-    Write-Host "No Chrome preferences file found."
+if (-not (Test-Path $chromeUserData)) {
+    Write-Host "Chrome User Data folder not found."
     exit
 }
 
-# 4. Load JSON
-$json = Get-Content $targetFile -Raw | ConvertFrom-Json
-
-# 5. Ensure session object exists
-if (-not $json.session) {
-    $json | Add-Member -MemberType NoteProperty -Name session -Value (@{})
+# 3. Get all profile folders
+$profiles = Get-ChildItem -Path $chromeUserData -Directory | Where-Object {
+    $_.Name -eq "Default" -or $_.Name -like "Profile*"
 }
 
-# 6. Apply startup settings
-$json.session.restore_on_startup = 4
-$json.session.startup_urls = @("chrome://settings/help")
+foreach ($profile in $profiles) {
 
-# 7. Save back
-$json | ConvertTo-Json -Depth 100 | Set-Content $targetFile -Encoding UTF8
+    Write-Host "`nProcessing profile: $($profile.Name)"
 
-Write-Host "Startup page set to chrome://settings/help"
+    $files = @(
+        Join-Path $profile.FullName "Preferences",
+        Join-Path $profile.FullName "Secure Preferences"
+    )
+
+    foreach ($file in $files) {
+
+        if (-not (Test-Path $file)) {
+            Write-Host "File not found: $file (skipping)"
+            continue
+        }
+
+        Write-Host "Editing: $file"
+
+        # 4. Backup file
+        $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+        $backupFile = "$file.bak_$timestamp"
+
+        Copy-Item $file $backupFile -Force
+        Write-Host "Backup created: $backupFile"
+
+        try {
+            # 5. Load JSON
+            $json = Get-Content $file -Raw | ConvertFrom-Json
+
+            # 6. Ensure session object exists
+            if (-not $json.session) {
+                $json | Add-Member -MemberType NoteProperty -Name session -Value (@{})
+            }
+
+            # 7. Apply startup settings
+            $json.session.restore_on_startup = 4
+            $json.session.startup_urls = @("chrome://settings/help")
+
+            # 8. Save changes
+            $json | ConvertTo-Json -Depth 100 | Set-Content $file -Encoding UTF8
+
+            Write-Host "Updated successfully"
+        }
+        catch {
+            Write-Host "Failed to edit: $file"
+        }
+    }
+}
+
+Write-Host "`nAll profiles and files processed."
