@@ -1,4 +1,4 @@
-$prefPath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Preferences"
+$prefPath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Secure Preferences"
 
 # Make sure Chrome is closed before running this
 if (Test-Path $prefPath) {
