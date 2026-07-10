@@ -1,1 +1,0 @@
-$temp="$env:TEMP\AcroRdrDC.exe"; Invoke-WebRequest -Uri "https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/latest/AcroRdrDCx64.exe" -OutFile $temp; $p=Start-Process -FilePath $temp -ArgumentList "/sAll /rs /rps /msi EULA_ACCEPT=YES" -Wait -PassThru; Remove-Item $temp -Force; exit $p.ExitCode
