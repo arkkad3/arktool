@@ -32,8 +32,8 @@
 # ---------------------------------------------------------------------------
 # CONFIG - update these whenever you refresh the installer
 # ---------------------------------------------------------------------------
-$ReaderInstallerUrl = "PASTE_ONEDRIVE_DIRECT_LINK_TO_READER_INSTALLER_EXE"
-$LatestVersion       = "25.001.20432"   # <-- update this to match the installer you uploaded
+$ReaderInstallerUrl = "https://palawanpawnshop.sharepoint.com/:u:/s/RCBServiceDeskTeam/IQD_eR_yQnYvTqJW2WnIY4M5AVLvBk4NpWtN4Oq2raKuZgg?e=s9Wr86&download-1"
+$LatestVersion       = "C2.600.121662"   # <-- update this to match the installer you uploaded
 $WorkDir             = "C:\Kaseya\AdobeReader"
 $LogPath             = "C:\ProgramData\Kaseya\AdobeReaderUpdate.log"
 
