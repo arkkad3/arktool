@@ -32,7 +32,7 @@
 # ---------------------------------------------------------------------------
 # CONFIG - update these whenever you refresh the installer
 # ---------------------------------------------------------------------------
-$ReaderInstallerUrl = "https://palawanpawnshop.sharepoint.com/:u:/s/RCBServiceDeskTeam/IQBRYfjeVspiSoxtgn4jjIsBAeAyJGifTgl9RbQ-LO9Dxsw?e=PzBNHU&download=1"
+$ReaderInstallerUrl = "https://ardownload3.adobe.com/pub/adobe/acrobat/win/AcrobatDC/2600121662/AcroRdrDCx642600121662_MUI.exe"
 $LatestVersion       = "C2.600.121662"   # <-- update this to match the installer you uploaded
 $WorkDir             = "C:\Kaseya\AdobeReader"
 $LogPath             = "C:\ProgramData\Kaseya\AdobeReaderUpdate.log"
